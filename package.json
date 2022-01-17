@@ -1,0 +1,18 @@
+{
+  "name": "AluraBudget",
+  "version": "1.0.0",
+  "description": "Config to commitzen",
+  "main": "index.js",
+  "repository": "https://github.com/willsantos/AluraBudget.git",
+  "author": "Wilson Santos <contato@wilsonsantos.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "commitizen": "^4.2.4",
+    "commitizen-emoji": "^1.0.5"
+  },
+  "config": {
+    "commitizenEmoji": {
+      "conventionalFormat": true
+    }
+  }
+}
