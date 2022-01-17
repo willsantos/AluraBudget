@@ -13,7 +13,7 @@ namespace AluraBudget.Models
         public string Description { get; set; }
 
         [Required]
-        public string Value { get; set; }
+        public Decimal Value { get; set; }
 
         public DateTime Date { get; set; }
 
