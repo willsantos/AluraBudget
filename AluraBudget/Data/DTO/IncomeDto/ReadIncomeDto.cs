@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AluraBudget.Data.DTO.IncomeDto
 {
-    public class CreateIncomeDto
+    public class ReadIncomeDto
     {
         [Required]
         public string Description { get; set; }
