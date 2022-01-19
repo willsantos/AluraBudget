@@ -28,8 +28,11 @@ namespace AluraBudget
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string mySqlConnection = Configuration.GetConnectionString("ApiConnection");
+
+            services.AddDbContextPool<AppDbContext>(opt => opt.UseLazyLoadingProxies().UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddDbContext<AppDbContext>(opts => opts.UseLazyLoadingProxies().UseMySQL(Configuration.GetConnectionString("ApiConnection")));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
