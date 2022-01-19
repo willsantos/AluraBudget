@@ -12,5 +12,6 @@ namespace AluraBudget.Data.DTO.IncomeDto
         public Decimal Value { get; set; }
 
         public DateTime Date { get; set; }
+
     }
 }

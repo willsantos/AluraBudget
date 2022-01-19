@@ -44,11 +44,21 @@ namespace AluraBudget.Controllers
         public IActionResult Create([FromBody] CreateIncomeDto incomeDto)
         {
             Income income = _mapper.Map<Income>(incomeDto);
+            
+
+            if (FindIncomeByDate(income) > 0)
+            {
+                return BadRequest("Item já cadastrado esse mês");
+            }
+
+
             _context.Incomes.Add(income);
             _context.SaveChanges();
 
             return CreatedAtAction(nameof(Create), income);
         }
+
+       
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateIncomeDto incomeDto)
@@ -59,6 +69,12 @@ namespace AluraBudget.Controllers
                 return NotFound();
             }
             _mapper.Map(incomeDto, income);
+
+            if (FindIncomeByDate(income) > 0)
+            {
+                return BadRequest("Item já cadastrado");
+            }
+
             _context.SaveChanges();
             return NoContent();
         }
@@ -67,7 +83,7 @@ namespace AluraBudget.Controllers
         public IActionResult Delete(int id)
         {
             Income income = FindById(id);
-            if(income == null)
+            if (income == null)
             {
                 return NotFound();
             }
@@ -82,6 +98,15 @@ namespace AluraBudget.Controllers
             return _context.Incomes.FirstOrDefault(income => income.Id == id);
         }
 
+        private int FindIncomeByDate(Income incomeDto)
+        {
+            return _context.Incomes
+                .Where(i =>
+                    i.Description == incomeDto.Description &&
+                    i.Date.Month == incomeDto.Date.Month &&
+                    i.Date.Year == incomeDto.Date.Year
+                ).Count();
+        }
 
 
 
