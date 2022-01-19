@@ -1,14 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace AluraBudget.Models
+namespace AluraBudget.Data.DTO.OutgoingDto
 {
-    public class Outgoing
+    public class ReadOutgoingDto
     {
-        [Key]
-        [Required]
-        public int Id { get; set; }
-
+        
         [Required]
         public string Description { get; set; }
 
@@ -16,6 +13,5 @@ namespace AluraBudget.Models
         public Decimal Value { get; set; }
 
         public DateTime Date { get; set; }
-
     }
 }
