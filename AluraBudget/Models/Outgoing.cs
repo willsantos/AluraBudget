@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AluraBudget.Helpers;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace AluraBudget.Models
@@ -14,6 +15,9 @@ namespace AluraBudget.Models
 
         [Required]
         public Decimal Value { get; set; }
+
+        [Required]
+        public OutgoingCategory Category { get; set; }
 
         public DateTime Date { get; set; }
 
