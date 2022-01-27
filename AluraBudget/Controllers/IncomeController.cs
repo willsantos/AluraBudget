@@ -3,7 +3,9 @@ using AluraBudget.Data.DTO.IncomeDto;
 using AluraBudget.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AluraBudget.Controllers
@@ -22,10 +24,19 @@ namespace AluraBudget.Controllers
         }
 
         [HttpGet]
-        public IEnumerable Index()
+        public IEnumerable Index([FromQuery] string descricao)
         {
-            return _context.Incomes;
+            List<Income> incomes = _context.Incomes.ToList();
+
+            if (!string.IsNullOrEmpty(descricao))
+            {
+                return FindIncomeByDescription(descricao);
+            }
+
+            return incomes;
         }
+
+        
 
         [HttpGet("{id}")]
         public IActionResult Show(int id)
@@ -96,6 +107,15 @@ namespace AluraBudget.Controllers
         private Income FindById(int id)
         {
             return _context.Incomes.FirstOrDefault(income => income.Id == id);
+        }
+
+        private IEnumerable FindIncomeByDescription(string descricao)
+        {
+            return _context.Incomes
+                .Where(i =>
+                    i.Description == descricao
+                )
+                .ToList();
         }
 
         private int FindIncomeByDate(Income incomeDto)
