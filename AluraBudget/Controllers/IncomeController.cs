@@ -2,6 +2,7 @@
 using AluraBudget.Data.DTO.IncomeDto;
 using AluraBudget.Models;
 using AutoMapper;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections;
@@ -36,7 +37,19 @@ namespace AluraBudget.Controllers
             return incomes;
         }
 
-        
+        [HttpGet("{year}/{month}")]
+        public IActionResult ListIncomesByMonth(int month, int year)
+        {
+           ICollection incomes = FindIncomesByMonth(year, month);
+
+            if (incomes.Count > 0)
+            {
+                return Ok(incomes);
+            }
+
+            return NoContent();
+
+        }
 
         [HttpGet("{id}")]
         public IActionResult Show(int id)
@@ -114,6 +127,17 @@ namespace AluraBudget.Controllers
             return _context.Incomes
                 .Where(i =>
                     i.Description == descricao
+                )
+                .ToList();
+        }
+
+        private ICollection FindIncomesByMonth(int year, int month)
+        {
+
+            return _context.Incomes
+                .Where(i =>
+                    i.Date.Year == year &&
+                    i.Date.Month == month
                 )
                 .ToList();
         }
