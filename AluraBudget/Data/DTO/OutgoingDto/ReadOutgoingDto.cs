@@ -1,5 +1,9 @@
-﻿using System;
+﻿using AluraBudget.Helpers;
+using System;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
 
 namespace AluraBudget.Data.DTO.OutgoingDto
 {
@@ -11,6 +15,8 @@ namespace AluraBudget.Data.DTO.OutgoingDto
 
         [Required]
         public Decimal Value { get; set; }
+
+        public OutgoingCategory Category { get; set; }
 
         public DateTime Date { get; set; }
     }

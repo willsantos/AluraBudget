@@ -1,9 +1,12 @@
 ﻿using AluraBudget.Data;
 using AluraBudget.Data.DTO.OutgoingDto;
+using AluraBudget.Helpers;
 using AluraBudget.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Linq;
 
 namespace AluraBudget.Controllers
@@ -43,10 +46,10 @@ namespace AluraBudget.Controllers
         public IActionResult Create([FromBody] CreateOutgoingDto outgoingDto)
         {
             Outgoing outgoing = _mapper.Map<Outgoing>(outgoingDto);
-            
 
+                     
             if (FindOutgoingByDate(outgoing) > 0)
-            {
+            {              
                 return BadRequest("Item já cadastrado");
             }
 
