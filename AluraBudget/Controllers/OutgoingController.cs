@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
@@ -13,7 +14,7 @@ namespace AluraBudget.Controllers
 {
     [ApiController]
     [Route("/despesas")]
-    public class OutgoingController: ControllerBase
+    public class OutgoingController : ControllerBase
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
@@ -25,14 +26,28 @@ namespace AluraBudget.Controllers
         }
 
         [HttpGet]
-        public IEnumerable Index()
+        public IEnumerable Index([FromQuery] string descricao)
         {
-            return _context.Outgoings;
+            List<Outgoing> outgoings = _context.Outgoings.ToList(); 
+
+
+            if (!string.IsNullOrEmpty(descricao))
+            {
+                return FindOutgoingByDescription(descricao);
+                
+            }
+
+            return outgoings;
         }
+
+
 
         [HttpGet("{id}")]
         public IActionResult Show(int id)
         {
+
+
+
             Outgoing outgoing = FindById(id);
             if (outgoing != null)
             {
@@ -47,9 +62,9 @@ namespace AluraBudget.Controllers
         {
             Outgoing outgoing = _mapper.Map<Outgoing>(outgoingDto);
 
-                     
+
             if (FindOutgoingByDate(outgoing) > 0)
-            {              
+            {
                 return BadRequest("Item já cadastrado");
             }
 
@@ -61,10 +76,10 @@ namespace AluraBudget.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id,[FromBody] UpdateOutgoingDto outgoingDto)
+        public IActionResult Update(int id, [FromBody] UpdateOutgoingDto outgoingDto)
         {
             Outgoing outgoing = FindById(id);
-            if(outgoing == null)
+            if (outgoing == null)
             {
                 return NotFound();
             }
@@ -85,7 +100,7 @@ namespace AluraBudget.Controllers
         public IActionResult Delete(int id)
         {
             Outgoing outgoing = FindById(id);
-            if(outgoing == null)
+            if (outgoing == null)
             {
                 return NotFound();
             }
@@ -95,6 +110,12 @@ namespace AluraBudget.Controllers
             return NoContent();
         }
 
+        private IEnumerable FindOutgoingByDescription(string description)
+        {
+            return _context.Outgoings
+                    .Where(o => o.Description == description)
+                    .ToList();
+        }
         private int FindOutgoingByDate(Outgoing outgoingDto)
         {
             return _context.Outgoings
