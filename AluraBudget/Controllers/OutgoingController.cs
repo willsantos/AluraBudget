@@ -1,13 +1,10 @@
 ﻿using AluraBudget.Data;
 using AluraBudget.Data.DTO.OutgoingDto;
-using AluraBudget.Helpers;
 using AluraBudget.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace AluraBudget.Controllers
@@ -40,7 +37,20 @@ namespace AluraBudget.Controllers
             return outgoings;
         }
 
+        [HttpGet("{year}/{month}")]
+        public IActionResult ListOutgoingsByMonth(int year, int month)
+        {
+            ICollection outgoings = FindOutgoingByMonth(year, month);
 
+            if(outgoings.Count > 0)
+            {
+                return Ok(outgoings);
+            }
+
+            return NoContent();
+        }
+
+        
 
         [HttpGet("{id}")]
         public IActionResult Show(int id)
@@ -115,6 +125,16 @@ namespace AluraBudget.Controllers
             return _context.Outgoings
                     .Where(o => o.Description == description)
                     .ToList();
+        }
+
+        private ICollection FindOutgoingByMonth(int year, int month)
+        {
+            return _context.Outgoings
+                .Where(o =>
+                    o.Date.Year == year &&
+                    o.Date.Month == month
+                )
+                .ToList();
         }
         private int FindOutgoingByDate(Outgoing outgoingDto)
         {
