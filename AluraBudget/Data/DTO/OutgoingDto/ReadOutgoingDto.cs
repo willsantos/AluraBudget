@@ -16,6 +16,7 @@ namespace AluraBudget.Data.DTO.OutgoingDto
         [Required]
         public Decimal Value { get; set; }
 
+        [Required]
         public OutgoingCategory Category { get; set; }
 
         public DateTime Date { get; set; }

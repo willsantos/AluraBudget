@@ -3,7 +3,6 @@ using Newtonsoft.Json.Converters;
 
 namespace AluraBudget.Helpers
 {
-    [JsonConverter(typeof(StringEnumConverter))]
     public enum OutgoingCategory
     {
         Outras, 
@@ -14,5 +13,9 @@ namespace AluraBudget.Helpers
         Educação,
         Lazer,
         Imprevistos,
+
+
     }
+
+   
 }
