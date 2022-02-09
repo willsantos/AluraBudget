@@ -1,19 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace UsersApi.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<IdentityUser<int>,IdentityRole<int>,int>
     {
         public AppDbContext(DbContextOptions<AppDbContext> opt) : base(opt)
         {
 
         }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-
-        }
-
-        
     }
 }

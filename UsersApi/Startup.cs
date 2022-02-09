@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UsersApi.Data;
+using UsersApi.Services;
 
 namespace UsersApi
 {
@@ -33,7 +35,9 @@ namespace UsersApi
             services.AddDbContextPool<AppDbContext>(opt => 
                 opt.UseLazyLoadingProxies()
                    .UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
-
+            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
+                .AddEntityFrameworkStores<AppDbContext>();
+            services.AddScoped<RegisterService, RegisterService>();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>
