@@ -37,6 +37,7 @@ namespace AluraBudget
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IncomeService, IncomeService>();
             services.AddScoped<OutgoingService, OutgoingService>();
+            services.AddScoped<ReportsService, ReportsService>();
             services.AddControllers().AddJsonOptions(x =>
             {
                 // serialize enums as strings in api responses (e.g. Role)
