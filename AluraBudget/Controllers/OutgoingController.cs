@@ -1,9 +1,7 @@
-﻿using AluraBudget.Data;
-using AluraBudget.Data.DTO.OutgoingDto;
-using AluraBudget.Models;
-using AutoMapper;
+﻿using AluraBudget.Data.DTO.OutgoingDto;
+using AluraBudget.Services;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,143 +11,65 @@ namespace AluraBudget.Controllers
     [Route("/despesas")]
     public class OutgoingController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
-
-        public OutgoingController(AppDbContext context, IMapper mapper)
+        private readonly OutgoingService _outgoingService;
+        
+        public OutgoingController(OutgoingService outgoingService)
         {
-            _context = context;
-            _mapper = mapper;
+            _outgoingService = outgoingService;
         }
 
         [HttpGet]
-        public IEnumerable Index([FromQuery] string descricao)
+        public IActionResult Index([FromQuery] string descricao)
         {
-            List<Outgoing> outgoings = _context.Outgoings.ToList(); 
-
-
-            if (!string.IsNullOrEmpty(descricao))
-            {
-                return FindOutgoingByDescription(descricao);
-                
-            }
-
-            return outgoings;
+            List<ReadOutgoingDto> readDto = _outgoingService.GetOutgoings(descricao);
+            if(readDto != null) return Ok(readDto);
+            return NotFound();
         }
 
         [HttpGet("{year}/{month}")]
         public IActionResult ListOutgoingsByMonth(int year, int month)
         {
-            ICollection outgoings = FindOutgoingByMonth(year, month);
-
-            if(outgoings.Count > 0)
-            {
-                return Ok(outgoings);
-            }
-
+            List<ReadOutgoingDto> readDto = _outgoingService.GetOutgoingsByMonth(year, month);
+            if(readDto != null) return Ok(readDto);
             return NoContent();
         }
-
-        
 
         [HttpGet("{id}")]
         public IActionResult Show(int id)
         {
-
-
-
-            Outgoing outgoing = FindById(id);
-            if (outgoing != null)
-            {
-                ReadOutgoingDto outgoingDto = _mapper.Map<ReadOutgoingDto>(outgoing);
-                return Ok(outgoingDto);
-            }
+            ReadOutgoingDto readDto = _outgoingService.GetOutgoingsById(id);
+            if (readDto != null) return Ok(readDto);
             return NotFound();
         }
 
         [HttpPost]
         public IActionResult Create([FromBody] CreateOutgoingDto outgoingDto)
         {
-            Outgoing outgoing = _mapper.Map<Outgoing>(outgoingDto);
-
-
-            if (FindOutgoingByDate(outgoing) > 0)
-            {
+            ReadOutgoingDto readDto = _outgoingService.AddOutgoing(outgoingDto);
+            
+            if(readDto == null) 
                 return BadRequest("Item já cadastrado");
-            }
-
-            _context.Outgoings.Add(outgoing);
-            _context.SaveChanges();
-
-            return CreatedAtAction(nameof(Create), outgoingDto);
-
+            return CreatedAtAction(nameof(Create), readDto);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateOutgoingDto outgoingDto)
         {
-            Outgoing outgoing = FindById(id);
-            if (outgoing == null)
-            {
-                return NotFound();
-            }
-
-            _mapper.Map(outgoingDto, outgoing);
-
-            if (FindOutgoingByDate(outgoing) > 0)
-            {
-                return BadRequest("Item já cadastrado");
-            }
-
-            _context.SaveChanges();
+            Result result = _outgoingService.UpdateOutgoing(id, outgoingDto);
+            if(result.IsFailed) return
+                    NotFound(result.Errors.FirstOrDefault().Message);
             return NoContent();
-
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            Outgoing outgoing = FindById(id);
-            if (outgoing == null)
-            {
-                return NotFound();
-            }
-            _context.Remove(outgoing);
-            _context.SaveChanges();
+            Result result = _outgoingService.RemoveOutgoing(id);
 
+            if(result.IsFailed) return 
+                    NotFound(result.Errors.FirstOrDefault().Message);
             return NoContent();
+            
         }
-
-        private IEnumerable FindOutgoingByDescription(string description)
-        {
-            return _context.Outgoings
-                    .Where(o => o.Description == description)
-                    .ToList();
-        }
-
-        private ICollection FindOutgoingByMonth(int year, int month)
-        {
-            return _context.Outgoings
-                .Where(o =>
-                    o.Date.Year == year &&
-                    o.Date.Month == month
-                )
-                .ToList();
-        }
-        private int FindOutgoingByDate(Outgoing outgoingDto)
-        {
-            return _context.Outgoings
-                            .Where(o =>
-                                o.Description == outgoingDto.Description &&
-                                o.Date.Month == outgoingDto.Date.Month &&
-                                o.Date.Year == outgoingDto.Date.Year
-                            ).Count();
-        }
-
-        private Outgoing FindById(int id)
-        {
-            return _context.Outgoings.FirstOrDefault(outgoing => outgoing.Id == id);
-        }
-
     }
 }
