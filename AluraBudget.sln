@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AluraBudget", "AluraBudget\AluraBudget.csproj", "{0411F2DB-7604-49F3-AA37-EABB124E56AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AluraBudget", "AluraBudget\AluraBudget.csproj", "{0411F2DB-7604-49F3-AA37-EABB124E56AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApi", "TestApi\TestApi.csproj", "{B3AE5D0D-B4B7-41B3-9A48-D00ECE21D113}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{0411F2DB-7604-49F3-AA37-EABB124E56AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0411F2DB-7604-49F3-AA37-EABB124E56AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0411F2DB-7604-49F3-AA37-EABB124E56AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3AE5D0D-B4B7-41B3-9A48-D00ECE21D113}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3AE5D0D-B4B7-41B3-9A48-D00ECE21D113}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3AE5D0D-B4B7-41B3-9A48-D00ECE21D113}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3AE5D0D-B4B7-41B3-9A48-D00ECE21D113}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
