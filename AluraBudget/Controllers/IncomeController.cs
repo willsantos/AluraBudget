@@ -1,13 +1,7 @@
-﻿using AluraBudget.Data;
-using AluraBudget.Data.DTO.IncomeDto;
-using AluraBudget.Models;
+﻿using AluraBudget.Data.DTO.IncomeDto;
 using AluraBudget.Services;
-using AutoMapper;
-using Castle.Core.Internal;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +11,7 @@ namespace AluraBudget.Controllers
     [Route("/receitas")]
     public class IncomeController : ControllerBase
     {
-        private  IncomeService _incomeService;
+        private readonly IncomeService _incomeService;
 
         public IncomeController(IncomeService incomeService)
         {
@@ -27,10 +21,10 @@ namespace AluraBudget.Controllers
         [HttpGet]
         public IActionResult Index([FromQuery] string descricao)
         {
-            List<ReadIncomeDto> readDto =_incomeService.GetIncomes(descricao);
-            if(readDto != null) return Ok(readDto);
+            List<ReadIncomeDto> readDto = _incomeService.GetIncomes(descricao);
+            if (readDto != null) return Ok(readDto);
             return NotFound();
-            
+
         }
 
         [HttpGet("{year}/{month}")]
@@ -49,7 +43,7 @@ namespace AluraBudget.Controllers
         {
 
             ReadIncomeDto readDto = _incomeService.GetIncomesById(id);
-            if(readDto != null) return Ok(readDto);
+            if (readDto != null) return Ok(readDto);
             return NotFound();
         }
 
@@ -57,7 +51,7 @@ namespace AluraBudget.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreateIncomeDto incomeDto)
         {
-            ReadIncomeDto readDto =  _incomeService.AddIncome(incomeDto);
+            ReadIncomeDto readDto = _incomeService.AddIncome(incomeDto);
 
             if (readDto == null)
                 return BadRequest("Item já cadastrado");
@@ -65,16 +59,16 @@ namespace AluraBudget.Controllers
             return CreatedAtAction(nameof(Create), readDto);
         }
 
-       
+
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] UpdateIncomeDto incomeDto)
         {
-            Result result =_incomeService.UpdateIncome(id, incomeDto);
+            Result result = _incomeService.UpdateIncome(id, incomeDto);
 
             if (result.IsFailed) return NotFound(result.Errors.FirstOrDefault().Message);
             return NoContent();
-            
+
         }
 
         [HttpDelete("{id}")]
@@ -82,16 +76,8 @@ namespace AluraBudget.Controllers
         {
             Result result = _incomeService.RemoveIncome(id);
 
-            if(result.IsFailed) return NotFound(result.Errors.FirstOrDefault().Message);
+            if (result.IsFailed) return NotFound(result.Errors.FirstOrDefault().Message);
             return NoContent();
         }
-
-       
-
-       
-
-        
-
-
     }
 }
