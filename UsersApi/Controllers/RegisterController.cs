@@ -26,8 +26,8 @@ namespace UsersApi.Controllers
             return Ok(result.Successes.FirstOrDefault());
         }
 
-        [HttpPost("/active")]
-        public IActionResult ActiveUserAccount(ActiveAccountRequest request)
+        [HttpGet("/active")]
+        public IActionResult ActiveUserAccount([FromQuery]ActiveAccountRequest request)
         {
             Result result = _registerService.ActiveAccount(request);
             if (result.IsFailed) return StatusCode(500);

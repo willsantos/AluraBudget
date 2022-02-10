@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using UsersApi.Data.DTO;
 using UsersApi.Data.Requests;
 using UsersApi.Models;
@@ -16,7 +17,11 @@ namespace UsersApi.Services
         private UserManager<IdentityUser<int>> _userManager;
         private EmailService _emailService;
 
-        public RegisterService(IMapper mapper, UserManager<IdentityUser<int>> userManager, EmailService emailService)
+        public RegisterService(
+            IMapper mapper,
+            UserManager<IdentityUser<int>> userManager, 
+            EmailService emailService
+            )
         {
             _mapper = mapper;
             _userManager = userManager;
@@ -33,7 +38,9 @@ namespace UsersApi.Services
             if (resultIdentity.Result.Succeeded)
             {
                 var ActivationCode = _userManager.GenerateEmailConfirmationTokenAsync(userIdentity).Result;
-                _emailService.SendEmail(new[] {userIdentity.Email},"Link de Ativação",userIdentity.Id,ActivationCode);
+                var encodedCode = HttpUtility.UrlEncode(ActivationCode);
+
+                _emailService.SendEmail(new[] {userIdentity.Email},"Link de Ativação",userIdentity.Id,encodedCode);
                 return Result.Ok().WithSuccess(ActivationCode);
             }
 
