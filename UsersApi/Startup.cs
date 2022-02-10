@@ -35,9 +35,15 @@ namespace UsersApi
             services.AddDbContextPool<AppDbContext>(opt => 
                 opt.UseLazyLoadingProxies()
                    .UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
-            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
-                .AddEntityFrameworkStores<AppDbContext>();
+            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
+                opt => opt.SignIn.RequireConfirmedEmail = true
+                )
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
             services.AddScoped<RegisterService, RegisterService>();
+            services.AddScoped<LoginService, LoginService>();
+            services.AddScoped<LogoutService,LogoutService>();
+            services.AddScoped<TokenService, TokenService>();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>

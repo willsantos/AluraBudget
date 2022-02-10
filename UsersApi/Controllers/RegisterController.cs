@@ -1,6 +1,8 @@
 ﻿using FluentResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using UsersApi.Data.DTO;
+using UsersApi.Data.Requests;
 using UsersApi.Services;
 
 namespace UsersApi.Controllers
@@ -21,7 +23,16 @@ namespace UsersApi.Controllers
         {
             Result result = _registerService.AddUser(createDto);
             if (result.IsFailed) return StatusCode(500);
-            return Ok();
+            return Ok(result.Successes.FirstOrDefault());
         }
+
+        [HttpPost("/active")]
+        public IActionResult ActiveUserAccount(ActiveAccountRequest request)
+        {
+            Result result = _registerService.ActiveAccount(request);
+            if (result.IsFailed) return StatusCode(500);
+            return Ok(result.Successes);
+        }
+
     }
 }
