@@ -25,5 +25,21 @@ namespace UsersApi.Controllers
             if (result.IsFailed) return Unauthorized(result.Errors.FirstOrDefault().Message);
             return Ok(result.Successes.FirstOrDefault());
         }
+
+        [HttpPost("/reset")]
+        public IActionResult SendResetPassword(SendResetPasswordRequest request)
+        {
+            Result result = _loginService.SendLinkToResetPassword(request);
+            if (result.IsFailed) return Unauthorized(result.Errors.FirstOrDefault());
+            return Ok(result.Successes.FirstOrDefault());
+        }
+
+        [HttpPost("/change-password")]
+        public IActionResult ResetPassword(ResetPasswordRequest request)
+        {
+            Result result = _loginService.ResetPassword(request);
+            if (result.IsFailed) return Unauthorized(result.Errors.FirstOrDefault());
+            return Ok(result.Successes.FirstOrDefault());
+        }
     }
 }
