@@ -1,6 +1,7 @@
 ﻿using AluraBudget.Data.DTO.IncomeDto;
 using AluraBudget.Services;
 using FluentResults;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace AluraBudget.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "regular")]
         public IActionResult Index([FromQuery] string descricao)
         {
             List<ReadIncomeDto> readDto = _incomeService.GetIncomes(descricao);
@@ -49,6 +51,7 @@ namespace AluraBudget.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Create([FromBody] CreateIncomeDto incomeDto)
         {
             ReadIncomeDto readDto = _incomeService.AddIncome(incomeDto);
