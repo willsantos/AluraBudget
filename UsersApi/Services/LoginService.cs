@@ -18,10 +18,12 @@ namespace UsersApi.Services
             _tokenService = tokenService;
         }
 
-        internal Result Login(LoginRequest request)
+        public Result Login(LoginRequest request)
         {
             Task<SignInResult> resultIndentity = _signInManager
                 .PasswordSignInAsync(request.UserName, request.Password, false, false);
+            
+
             if (resultIndentity.Result.Succeeded)
             {
                 var identityUser = _signInManager
@@ -30,7 +32,11 @@ namespace UsersApi.Services
                     .FirstOrDefault(user =>
                     user.NormalizedUserName == request.UserName.ToUpper());
 
-                Token token = _tokenService.CreateToken(identityUser);
+                
+
+                Token token = _tokenService.CreateToken(identityUser,_signInManager
+                    .UserManager.GetRolesAsync(identityUser).Result.FirstOrDefault());
+                
                 return Result.Ok().WithSuccess(token.Value);
             }
             return Result.Fail("Login falhou");

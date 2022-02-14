@@ -16,16 +16,18 @@ namespace UsersApi.Services
         private readonly IMapper _mapper;
         private UserManager<IdentityUser<int>> _userManager;
         private EmailService _emailService;
+        private RoleManager<IdentityRole<int>> _roleManager;
 
         public RegisterService(
             IMapper mapper,
-            UserManager<IdentityUser<int>> userManager, 
+            UserManager<IdentityUser<int>> userManager,
             EmailService emailService
-            )
+, RoleManager<IdentityRole<int>> roleManager)
         {
             _mapper = mapper;
             _userManager = userManager;
             _emailService = emailService;
+            _roleManager = roleManager;
         }
 
         public UserManager<IdentityUser<int>> UserManager { get; }
@@ -34,14 +36,36 @@ namespace UsersApi.Services
         {
             User user = _mapper.Map<User>(createDto);
             IdentityUser<int> userIdentity = _mapper.Map<IdentityUser<int>>(user);
-            Task<IdentityResult> resultIdentity = _userManager.CreateAsync(userIdentity,createDto.Password);
+            Task<IdentityResult> resultIdentity = _userManager.CreateAsync(userIdentity, createDto.Password);
+
+            
+
+
+            //var createRoleResult = _roleManager
+            //    .CreateAsync(new IdentityRole<int>("admin")).Result;
+
+            //var userRoleResult = _userManager
+            //    .AddToRoleAsync(userIdentity, "admin").Result;
+
+
+
+
+
+
             if (resultIdentity.Result.Succeeded)
             {
-                var ActivationCode = _userManager.GenerateEmailConfirmationTokenAsync(userIdentity).Result;
-                var encodedCode = HttpUtility.UrlEncode(ActivationCode);
+                Task<IdentityResult> roleResult = _userManager.AddToRoleAsync(userIdentity, "regular");
 
-                _emailService.SendEmail(new[] {userIdentity.Email},"Link de Ativação",userIdentity.Id,encodedCode);
-                return Result.Ok().WithSuccess(ActivationCode);
+                if (roleResult.Result.Succeeded)
+                {
+                    var ActivationCode = _userManager.GenerateEmailConfirmationTokenAsync(userIdentity).Result;
+                    var encodedCode = HttpUtility.UrlEncode(ActivationCode);
+
+                    _emailService.SendEmail(new[] { userIdentity.Email }, "Link de Ativação", userIdentity.Id, encodedCode);
+                    return Result.Ok().WithSuccess(ActivationCode);
+                }
+
+                
             }
 
             return Result.Fail("Falha ao cadastrar o usuário");

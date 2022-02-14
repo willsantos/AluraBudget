@@ -32,9 +32,12 @@ namespace UsersApi
         {
 
             string mySqlConnection = Configuration.GetConnectionString("ApiConnection");
+            
             services.AddDbContextPool<AppDbContext>(opt => 
                 opt.UseLazyLoadingProxies()
                    .UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
+
+
             services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
                 opt => opt.SignIn.RequireConfirmedEmail = true
                 )
