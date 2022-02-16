@@ -1,5 +1,6 @@
 ﻿using AluraBudget.Data.DTO.ReportsDto;
 using AluraBudget.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AluraBudget.Controllers
@@ -16,6 +17,7 @@ namespace AluraBudget.Controllers
         }
 
         [HttpGet("{year}/{month}")]
+        [Authorize(Roles = "regular")]
         public IActionResult Index(int year, int month)
         {
 

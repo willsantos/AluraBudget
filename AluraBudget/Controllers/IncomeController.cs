@@ -30,6 +30,7 @@ namespace AluraBudget.Controllers
         }
 
         [HttpGet("{year}/{month}")]
+        [Authorize(Roles = "regular")]
         public IActionResult ListIncomesByMonth(int month, int year)
         {
 
@@ -41,6 +42,7 @@ namespace AluraBudget.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "regular")]
         public IActionResult Show(int id)
         {
 
@@ -51,7 +53,7 @@ namespace AluraBudget.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "regular")]
         public IActionResult Create([FromBody] CreateIncomeDto incomeDto)
         {
             ReadIncomeDto readDto = _incomeService.AddIncome(incomeDto);
@@ -65,6 +67,7 @@ namespace AluraBudget.Controllers
 
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "regular")]
         public IActionResult Update(int id, [FromBody] UpdateIncomeDto incomeDto)
         {
             Result result = _incomeService.UpdateIncome(id, incomeDto);
@@ -75,6 +78,7 @@ namespace AluraBudget.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "regular")]
         public IActionResult Delete(int id)
         {
             Result result = _incomeService.RemoveIncome(id);
